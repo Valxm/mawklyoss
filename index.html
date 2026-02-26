@@ -113,13 +113,35 @@
             text-decoration: underline;
         }
 
-        .timer-val {
-            font-size: 2rem;
+        /* تنسيق صندوق التواريخ الجديد */
+        .date-container {
+            display: flex;
+            justify-content: space-around;
+            margin: 30px 0;
+            border-top: 1px solid rgba(184, 134, 11, 0.3);
+            border-bottom: 1px solid rgba(184, 134, 11, 0.3);
+            padding: 20px 0;
+        }
+
+        .date-box {
+            text-align: center;
+        }
+
+        .date-label {
+            display: block;
+            font-size: 0.8rem;
+            color: var(--dark-red);
+            font-weight: bold;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+
+        .date-value {
+            font-size: 1.8rem;
             color: #fff;
             font-family: 'Courier New', monospace;
-            display: block;
-            margin: 20px 0;
-            letter-spacing: 3px;
+            letter-spacing: 2px;
+            text-shadow: 0 0 10px rgba(184, 134, 11, 0.5);
         }
 
         .download-btn {
@@ -132,6 +154,7 @@
             font-weight: bold;
             transition: 0.5s;
             text-transform: uppercase;
+            margin-top: 10px;
         }
 
         .download-btn:hover {
@@ -187,13 +210,24 @@
 
         <div class="rep-section">
             <span class="rep-title">أرشيف السقوط المهين (REPLAY FILE)</span>
-            <p style="font-size: 0.9rem; color: #666;">قم بتحميل الدليل القاطع على تلاشي مهاراتكم أمام أسياد الميدان</p>
             
-            <div id="timer" class="timer-val">90D : 00H : 00M : 00S</div>
+            <div class="date-container">
+                <div class="date-box">
+                    <span class="date-label">تاريخ صدور الحكم</span>
+                    <span class="date-value">2026 / 02 / 26</span>
+                </div>
+                <div style="border-left: 1px solid rgba(184,134,11,0.2);"></div>
+                <div class="date-box">
+                    <span class="date-label">تاريخ انتهاء النفي</span>
+                    <span class="date-value">2026 / 05 / 26</span>
+                </div>
+            </div>
+
+            <p style="font-size: 0.9rem; color: #666; margin-bottom: 20px;">قم بتحميل الدليل القاطع على تلاشي مهاراتكم أمام أسياد الميدان</p>
 
             <a href="https://www.mediafire.com/file/v2cn06n2u1omcmb/mawkly_oss_vs_yasser_haroon_.rep/file" 
                target="_blank" class="download-btn">
-                DOWNLOAD THE RECORD OF DEFEAT
+                DOWNLOAD RECORD OF DEFEAT
             </a>
         </div>
 
@@ -208,17 +242,6 @@
             audio.volume = 0.4;
             audio.play();
         }
-
-        let totalSeconds = 90 * 24 * 3600;
-        setInterval(() => {
-            totalSeconds--;
-            let d = Math.floor(totalSeconds / 86400);
-            let h = Math.floor((totalSeconds % 86400) / 3600);
-            let m = Math.floor((totalSeconds % 3600) / 60);
-            let s = totalSeconds % 60;
-            document.getElementById('timer').innerText = 
-                `${String(d).padStart(2, '0')}D : ${String(h).padStart(2, '0')}H : ${String(m).padStart(2, '0')}M : ${String(s).padStart(2, '0')}S`;
-        }, 1000);
     </script>
 </body>
 </html>
