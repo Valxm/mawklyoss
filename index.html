@@ -3,170 +3,148 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>وثيقة الإقصاء النهائية | ماوكلي و الأوس</title>
+    <title>وثيقة السيادة | ماوكلي و الأوس</title>
+    
+    <link rel="icon" href="https://img.icons8.com/ios-filled/50/c5a059/crown.png" type="image/png">
+    
     <style>
         :root {
-            --dark-steel: #0a0a0a;
-            --gold-leaf: #b8860b;
-            --dark-red: #4a0404;
-            --light-gray: #d1d1d1;
+            --bg-base: #0a0a0b;
+            --accent: #c5a059;
+            --text-primary: #f0f0f0;
+            --text-secondary: #a1a1a6;
+            --glass-bg: rgba(255, 255, 255, 0.03);
+            --red-alert: #e63946;
         }
 
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
         body {
-            margin: 0;
-            padding: 0;
-            font-family: 'Times New Roman', serif;
-            background-color: var(--dark-steel);
-            color: var(--light-gray);
+            background-color: var(--bg-base);
+            color: var(--text-primary);
+            font-family: 'SF Pro Display', 'Segoe UI', 'Times New Roman', serif;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            background-image: radial-gradient(circle at center, #1a1a1a 0%, #050505 100%);
-            line-height: 1.6;
+            line-height: 1.8;
+            overflow-x: hidden;
+            background-image: radial-gradient(circle at 10% 20%, rgba(197, 160, 89, 0.05) 0%, transparent 40%);
         }
 
-        .main-container {
+        .wrapper {
             width: 100%;
-            max-width: 850px;
-            background: rgba(0, 0, 0, 0.9);
-            border: 2px solid var(--gold-leaf);
-            padding: 60px;
-            box-shadow: 0 0 100px rgba(0, 0, 0, 1), inset 0 0 20px rgba(184, 134, 11, 0.1);
-            position: relative;
+            max-width: 1000px;
+            padding: 40px;
+            opacity: 0;
+            animation: fadeIn 1.5s forwards;
         }
 
-        .main-container::after {
-            content: 'V';
-            position: absolute;
-            bottom: 10px; right: 10px;
-            font-size: 10px; color: var(--gold-leaf); opacity: 0.3;
-        }
+        @keyframes fadeIn { to { opacity: 1; } }
 
-        header {
+        .glass-header {
             text-align: center;
-            border-bottom: 2px solid var(--gold-leaf);
-            padding-bottom: 30px;
-            margin-bottom: 40px;
+            margin-bottom: 60px;
         }
 
-        .title {
-            font-size: 3.5rem;
-            color: var(--gold-leaf);
-            margin: 0;
-            font-weight: 900;
+        .protocol-tag {
+            font-size: 0.7rem;
             letter-spacing: 5px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            color: var(--accent);
+            text-transform: uppercase;
+            margin-bottom: 10px;
+            display: block;
         }
 
-        .sub-header {
-            font-size: 1rem;
-            letter-spacing: 8px;
-            color: var(--dark-red);
-            font-weight: bold;
-            margin-top: 10px;
+        .main-title {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-weight: 200;
+            letter-spacing: -1px;
+            color: #fff;
         }
 
-        .content-section {
+        .content-card {
+            background: var(--glass-bg);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 60px;
+            border-radius: 2px;
+            position: relative;
+            backdrop-filter: blur(20px);
+        }
+
+        .content-card::before {
+            content: '';
+            position: absolute;
+            left: 0; top: 0; bottom: 0;
+            width: 2px;
+            background: var(--accent);
+        }
+
+        #typewriter-text {
+            font-size: 1.3rem;
+            color: var(--text-secondary);
             text-align: justify;
-            margin-bottom: 50px;
+            min-height: 400px;
         }
 
-        .content-section p {
-            font-size: 1.25rem;
-            margin-bottom: 25px;
-            color: #ccc;
+        .highlight { color: #fff; font-weight: 500; }
+        .master { color: var(--accent); font-weight: bold; border-bottom: 1px solid var(--accent); }
+        .neutralized { color: #444; text-decoration: line-through; }
+
+        /* سجل الأحداث المطور */
+        .event-logs {
+            margin-top: 50px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            opacity: 0;
+            transition: 1s ease;
         }
 
-        .highlight-gold {
-            color: var(--gold-leaf);
-            font-weight: bold;
+        .log-item {
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-right: 3px solid transparent;
         }
 
-        .master-names {
-            font-size: 1.5rem;
-            color: #fff;
-            border-bottom: 1px solid var(--gold-leaf);
-            padding: 0 5px;
-            font-weight: bold;
-        }
+        .log-item.critical { border-right-color: var(--red-alert); }
 
-        .loser-names {
-            color: #555;
-            text-decoration: line-through;
-            font-style: italic;
-        }
+        .log-label { font-size: 0.65rem; color: var(--accent); text-transform: uppercase; display: block; margin-bottom: 8px; }
+        .log-txt { font-size: 0.9rem; color: var(--text-secondary); }
 
-        .rep-section {
-            background: rgba(184, 134, 11, 0.05);
-            padding: 30px;
-            border: 1px solid rgba(184, 134, 11, 0.2);
-            text-align: center;
-        }
-
-        .rep-title {
-            font-size: 1.5rem;
-            color: var(--gold-leaf);
-            margin-bottom: 20px;
-            font-weight: bold;
-            display: block;
-            text-decoration: underline;
-        }
-
-        /* تنسيق صندوق التواريخ الجديد */
-        .date-container {
+        .action-bar {
+            margin-top: 50px;
             display: flex;
-            justify-content: space-around;
-            margin: 30px 0;
-            border-top: 1px solid rgba(184, 134, 11, 0.3);
-            border-bottom: 1px solid rgba(184, 134, 11, 0.3);
-            padding: 20px 0;
+            justify-content: space-between;
+            align-items: center;
+            opacity: 0;
+            transition: 1s ease;
         }
 
-        .date-box {
-            text-align: center;
-        }
-
-        .date-label {
-            display: block;
-            font-size: 0.8rem;
-            color: var(--dark-red);
-            font-weight: bold;
-            text-transform: uppercase;
-            margin-bottom: 5px;
-        }
-
-        .date-value {
-            font-size: 1.8rem;
+        .download-link {
             color: #fff;
-            font-family: 'Courier New', monospace;
-            letter-spacing: 2px;
-            text-shadow: 0 0 10px rgba(184, 134, 11, 0.5);
-        }
-
-        .download-btn {
-            display: inline-block;
-            padding: 15px 50px;
-            border: 1px solid var(--gold-leaf);
-            color: var(--gold-leaf);
             text-decoration: none;
-            font-size: 1.1rem;
-            font-weight: bold;
-            transition: 0.5s;
-            text-transform: uppercase;
-            margin-top: 10px;
+            font-size: 0.9rem;
+            padding: 12px 30px;
+            border: 1px solid var(--accent);
+            transition: 0.4s;
+            letter-spacing: 1px;
         }
 
-        .download-btn:hover {
-            background: var(--gold-leaf);
+        .download-link:hover {
+            background: var(--accent);
             color: #000;
-            box-shadow: 0 0 30px rgba(184, 134, 11, 0.3);
         }
+
+        .time-badge { text-align: left; }
+        .time-label { font-size: 0.65rem; color: var(--red-alert); font-weight: bold; display: block; }
+        .time-val { font-size: 1.1rem; color: #fff; font-family: monospace; }
 
         footer {
-            margin-top: 40px;
+            margin-top: 80px;
             text-align: center;
-            font-size: 0.7rem;
+            font-size: 0.6rem;
             color: #333;
             letter-spacing: 4px;
         }
@@ -178,71 +156,80 @@
         <source src="https://www.myinstants.com/media/sounds/evil-laugh-dark-knight.mp3" type="audio/mpeg">
     </audio>
 
-    <div class="main-container">
-        <header>
-            <h1 class="title">بيان السيطرة المطلقة</h1>
-            <div class="sub-header">THE SUPREMACY PROTOCOL</div>
+    <div class="wrapper">
+        <header class="glass-header">
+            <span class="protocol-tag">Official Exclusion Protocol 2026</span>
+            <h1 class="main-title">بيان السيطرة المطلقة</h1>
         </header>
 
-        <section class="content-section">
-            <p>
-                بناءً على مقتضيات السيادة الميدانية، وتطبيقاً لقوانين القوة التي لا تحابي الضعفاء، نعلن نحن <span class="master-names">المعلم ماوكلي</span> و <span class="master-names">الأوس</span> عن البدء الفوري لبروتوكول العزل الشامل ضد المدعوين <span class="loser-names">ياسر وهارون</span>.
-            </p>
-            <p>
-                لقد تجاوز غروركما حدود المهارة، فكان لزاماً علينا أن نعيدكما إلى حجمكما الطبيعي خلف أسوار النسيان. إن ما حدث في الميدان لم يكن مجرد جولة عابرة، بل كان <span class="highlight-gold">تصفية حسابات مهارية</span> أثبتت أنكما مجرد عابرين في ساحة العمالقة.
-            </p>
-            <p>
-                أنتما الآن تقبعان في حالة <span class="highlight-gold">نفي تقني</span> تام. يُحظر عليكما محاولة الاتصال أو طلب المنافسة، فنحن لا نضيع وقتنا مع من لم يتقنوا أبجديات الصمود بعد. إن مواجهتنا ليست حقاً مكتسباً، بل هي شرف لا يناله إلا الأكفاء، وأنتما أبعد ما تكونان عن ذلك.
-            </p>
-            <p>
-                لقد سقطت كل أوهامكما عند أول اختبار حقيقي، وتبين للجميع أن صمودكم لم يكن إلا مجرد حظ عابر انتهى تحت أقدام المعلمين. لا مجال اليوم للأعذار الواهية، فالتاريخ لا يذكر إلا المنتصرين، وأنتم لستم سوى هامش في كتاب انتصاراتنا.
-            </p>
-            <p>
-                إن هذه الوثيقة ليست مجرد كلمات، بل هي حكم مبرم بالخضوع. لقد كسرنا شوكة التحدي في نفوسكم، وجعلنا من هزيمتكم عبرة لكل من تسول له نفسه التطاول على أسياد الساحة. الصمت الآن هو خياركم الوحيد، والاعتراف بالعجز هو أول خطوات التكفير عن غروركم.
-            </p>
-            <p>
-                في عالم القوة، البقاء للأذكى والأشرس، وقد أثبت <span class="master-names">ماوكلي</span> و <span class="master-names">الأوس</span> أن العرش لا يقبل القسمة، وأن السيادة لمن يفرضها بالميدان لا باللسان. لقد انتهى زمن العبث، وبدأ زمن الخضوع للأمر الواقع المرير.
-            </p>
-            <p>
-                تبدأ الآن فترة <span class="highlight-gold">التأديب الإجباري</span> ومدتها خمسة أشهر. استغلا هذا الوقت في دراسة الهزيمة وبناء ما دمره الإقصاء. لا عودة، لا تفاوض، ولا صلح، حتى يثبت الزمن أنكما استوعبتما الدرس جيداً وتجرعتم مرارة السقوط بوقار.
-            </p>
-        </section>
-
-        <div class="rep-section">
-            <span class="rep-title">أرشيف السقوط المهين (REPLAY FILE)</span>
-            
-            <div class="date-container">
-                <div class="date-box">
-                    <span class="date-label">تاريخ صدور الحكم</span>
-                    <span class="date-value">2026 / 02 / 26</span>
-                </div>
-                <div style="border-left: 1px solid rgba(184,134,11,0.2);"></div>
-                <div class="date-box">
-                    <span class="date-label">تاريخ انتهاء النفي</span>
-                    <span class="date-value">2026 / 07 / 26</span>
-                </div>
-            </div>
-
-            <p style="font-size: 0.9rem; color: #666; margin-bottom: 20px;">قم بتحميل الدليل القاطع على تلاشي مهاراتكم أمام أسياد الميدان</p>
-
-            <a href="https://www.mediafire.com/file/v2cn06n2u1omcmb/mawkly_oss_vs_yasser_haroon_.rep/file" 
-               target="_blank" class="download-btn">
-                DOWNLOAD RECORD OF DEFEAT
-            </a>
+        <div class="content-card">
+            <div id="typewriter-text"></div>
         </div>
 
-        <footer>
-            DOMINATION ESTABLISHED - SUPREMACY CONFIRMED - NO REMATCH - 2026
-        </footer>
+        <div class="event-logs" id="logs">
+            <div class="log-item">
+                <span class="log-label">Internal Status (Yasser)</span>
+                <p class="log-txt">رصد ادعاءات من ياسر بالقدرة على المسح الميداني فور انضمام هارون.</p>
+            </div>
+            <div class="log-item critical">
+                <span class="log-label">Threat Assessment (Haroon)</span>
+                <p class="log-txt">توعد هارون بإعادة فرض هيبتهم المزعومة فور دخوله؛ ولكن "لا كلام لمن لا ينادي"، تم سحق التهديد في مهده.</p>
+            </div>
+            <div class="log-item">
+                <span class="log-label">Final Outcome</span>
+                <p class="log-txt" style="color: #00ff88;">تم القضاء التام على أهداف التحالف. النظام مستقر تحت سيادة الأسياد.</p>
+            </div>
+        </div>
+
+        <div class="action-bar" id="actions">
+            <div>
+                <span class="time-label">تاريخ صدور الحكم</span>
+                <span class="time-val">26 . 02 . 2026</span>
+            </div>
+            
+            <a href="https://www.mediafire.com/file/v2cn06n2u1omcmb/mawkly_oss_vs_yasser_haroon_.rep/file" target="_blank" class="download-link">
+                EVIDENCE DATA
+            </a>
+
+            <div class="time-badge">
+                <span class="time-label">تاريخ العفو المتوقع</span>
+                <span class="time-val">26 . 07 . 2026</span>
+            </div>
+        </div>
+
+        <footer>© 2026 SUPREMACY BY MAWKLY & OSS. ALL RIGHTS RESERVED.</footer>
     </div>
 
     <script>
         function playDarkTheme() {
             const audio = document.getElementById('evilLaugh');
-            audio.volume = 0.4;
+            audio.volume = 0.3;
             audio.play();
         }
+
+        const rawText = `بناءً على مقتضيات السيادة الميدانية، وتطبيقاً لقوانين القوة التي لا تحابي الضعفاء، نعلن نحن <span class="master">المعلم ماوكلي</span> و <span class="master">الأوس</span> عن البدء الفوري لبروتوكول العزل الشامل ضد المدعوين <span class="neutralized">ياسر وهارون</span>.<br><br>لقد تجاوز غروركما حدود المهارة، فكان لزاماً علينا أن نعيدكما إلى حجمكما الطبيعي خلف أسوار النسيان. إن ما حدث في الميدان لم يكن مجرد جولة عابرة، بل كان <span class="highlight">تصفية حسابات مهارية</span> أثبتت أنكما مجرد عابرين في ساحة العمالقة. لقد تحجج ياسر بأوهام واهية، مدعياً أنه بدخول "هارون" إلى جانبه سيتم مسحنا من الميدان، ولكن الحقيقة المرة تجلت في انكساركم مجتمعين أمام سطوة الأسياد.<br><br>أنتما الآن تقبعان في حالة <span class="highlight">نفي تقني</span> تام. يُحظر عليكما محاولة الاتصال أو طلب المنافسة، فنحن لا نضيع وقتنا مع من لم يتقنوا أبجديات الصمود بعد. إن مواجهتنا ليست حقاً مكتسباً، بل هي شرف لا يناله إلا الأكفاء، وأنتما أبعد ما تكونان عن ذلك.<br><br>لقد سقطت كل أوهامكما عند أول اختبار حقيقي، وتبين للجميع أن صمودكم لم يكن إلا مجرد حظ عابر انتهى تحت أقدام المعلمين. لا مجال اليوم للأعذار الواهية، فالتاريخ لا يذكر إلا المنتصرين، وأنتم لستم سوى هامش في كتاب انتصاراتنا.<br><br>إن هذه الوثيقة ليست مجرد كلمات، بل هي حكم مبرم بالخضوع. لقد كسرنا شوكة التحدي في نفوسكم، وجعلنا من هزيمتكم عبرة لكل من تسول له نفسه التطاول على أسياد الساحة. الصمت الآن هو خياركم الوحيد، والاعتراف بالعجز هو أول خطوات التكفير عن غروركم.<br><br>في عالم القوة، البقاء للأذكى والأشرس، وقد أثبت <span class="master">ماوكلي</span> و <span class="master">الأوس</span> أن العرش لا يقبل القسمة، وأن السيادة لمن يفرضها بالميدان لا باللسان. لقد انتهى زمن العبث، وبدأ زمن الخضوع للأمر الواقع المرير.<br><br>تبدأ الآن فترة <span class="highlight">التأديب الإجباري</span> ومدتها خمسة أشهر. استغلا هذا الوقت في دراسة الهزيمة وبناء ما دمره الإقصاء. لا عودة، لا تفاوض، ولا صلح، حتى يثبت الزمن أنكما استوعبتما الدرس جيداً وتجرعتم مرارة السقوط بوقار.`;
+
+        let index = 0;
+        const target = document.getElementById('typewriter-text');
+        const logs = document.getElementById('logs');
+        const actions = document.getElementById('actions');
+
+        function writer() {
+            if (index < rawText.length) {
+                if (rawText.charAt(index) === '<') {
+                    index = rawText.indexOf('>', index) + 1;
+                } else {
+                    index++;
+                }
+                target.innerHTML = rawText.substring(0, index);
+                setTimeout(writer, 12);
+            } else {
+                logs.style.opacity = '1';
+                actions.style.opacity = '1';
+            }
+        }
+
+        window.onload = () => setTimeout(writer, 1000);
     </script>
 </body>
 </html>
-
