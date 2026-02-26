@@ -350,7 +350,7 @@
         });
 
         function deleteItem(path, key) {
-            if(prompt("أدخل كلمة سر الإدارة للحذف (123):") === "123") { 
+            if(prompt("أدخل كلمة سر الإدارة للحذف :") === "9122e2") { 
                 db.ref(path + key).remove(); 
             } else { 
                 alert("عذراً، الصلاحية للمعلمين فقط!"); 
@@ -450,3 +450,4 @@
     </script>
 </body>
 </html>
+
