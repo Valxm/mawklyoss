@@ -440,7 +440,7 @@
             document.getElementById('actualForm').style.display = "none";
             const msg = document.getElementById('priceMsg');
             msg.style.display = "block";
-            msg.innerHTML = selectedLevel === 100 ? "تم تأكيد الدفع (100$).<br>أنت الآن في مستوى الاحتراف! سيتم تدريبك مباشرة تحت إشراف الأوس وماوكلي." : `تم تأكيد الدفع (${selectedLevel}$).<br>سيتم إرسال المواد التدريبية إلى بريدك الإلكتروني.`;
+            msg.innerHTML = selectedLevel === 100 ? "عندما سيتم تأكيد الدفع (100$).<br>أنت الآن في مستوى الاحتراف! سيتم تدريبك مباشرة تحت إشراف الأوس وماوكلي." : `عندما ستيم تأكيد الدفع (${selectedLevel}$).<br>سيتم إرسال المواد التدريبية إلى بريدك الإلكتروني.`;
         }
 
         const targetDate = new Date("July 26, 2026 00:00:00").getTime();
@@ -458,3 +458,4 @@
     </script>
 </body>
 </html>
+
