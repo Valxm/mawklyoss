@@ -86,7 +86,8 @@
         }
         .btn-course:hover { transform: translateY(-5px); box-shadow: 0 15px 30px rgba(197, 160, 89, 0.4); background: #d4ae6a; }
 
-        .comments-container {
+        /* ستايلات السجلات (التعليقات والطلبات) */
+        .comments-container, .registration-log-container {
             width: 100%; margin-top: 50px; background: var(--glass-bg); border: 1px solid var(--border);
             padding: 40px; border-radius: 20px; animation: fadeIn 1.6s ease-out;
         }
@@ -94,11 +95,11 @@
         .comment-input-group input, .comment-input-group textarea {
             background: rgba(0,0,0,0.4); border: 1px solid #333; color: #fff; padding: 15px; border-radius: 8px; outline: none; border-bottom: 2px solid var(--accent);
         }
-        .comment-item { 
+        .comment-item, .log-item { 
             background: rgba(255,255,255,0.02); padding: 20px; border-radius: 12px; margin-bottom: 20px;
             border-right: 3px solid var(--accent); animation: fadeIn 0.5s ease-out;
         }
-        .comment-header { display: flex; justify-content: space-between; font-size: 0.85rem; margin-bottom: 10px; }
+        .comment-header, .log-header { display: flex; justify-content: space-between; font-size: 0.85rem; margin-bottom: 10px; }
         .admin-del { color: #ff4d4d; cursor: pointer; font-size: 0.75rem; text-decoration: underline; margin-right: 10px; }
 
         .form-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); display: none; justify-content: center; align-items: center; z-index: 2000; overflow-y: auto; padding: 20px; backdrop-filter: blur(10px); }
@@ -142,8 +143,7 @@
             .course-section { padding: 30px 20px; }
             .highlights-grid { grid-template-columns: 1fr; }
             .moment-img { height: 200px; }
-            .comments-container { padding: 20px; }
-            .comment-header { flex-direction: column; gap: 5px; }
+            .comments-container, .registration-log-container { padding: 20px; }
         }
     </style>
 </head>
@@ -202,6 +202,11 @@
             <button class="btn-course" onclick="openForm()">سجل في كورس التدريب الآن</button>
         </div>
 
+        <div class="registration-log-container">
+            <h2 style="color:var(--accent); margin-bottom:25px; border-bottom: 1px solid var(--border); padding-bottom:10px;">📋 سجل طلبات الانضمام للأكاديمية</h2>
+            <div id="registrationLog"></div>
+        </div>
+
         <div class="comments-container">
             <h2 style="color:var(--accent); margin-bottom:25px; border-bottom: 1px solid var(--border); padding-bottom:10px;">📜 سجل المحاربين والزوار (مباشر)</h2>
             <div class="comment-input-group">
@@ -247,9 +252,9 @@
                 <div class="form-group full">
                     <label>المستوى التدريبي المطلوب:</label>
                     <div class="level-selection">
-                        <div class="level-option" onclick="selectLevel(this, 10)">المستوى الأول (10$)<br><small>أساسيات</small></div>
-                        <div class="level-option" onclick="selectLevel(this, 50)">المستوى المتوسط (50$)<br><small>تعليمات وفيديوهات</small></div>
-                        <div class="level-option" onclick="selectLevel(this, 100)">الاحتراف المباشر (100$)<br><small>إشراف ماوكلي وأوس</small></div>
+                        <div class="level-option" onclick="selectLevel(this, 10, 'المستوى الأول')">المستوى الأول (10$)<br><small>أساسيات</small></div>
+                        <div class="level-option" onclick="selectLevel(this, 50, 'المستوى المتوسط')">المستوى المتوسط (50$)<br><small>تعليمات وفيديوهات</small></div>
+                        <div class="level-option" onclick="selectLevel(this, 100, 'الاحتراف المباشر')">الاحتراف المباشر (100$)<br><small>إشراف ماوكلي وأوس</small></div>
                     </div>
                 </div>
                 <div class="form-group full">
@@ -288,13 +293,18 @@
         if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
         const db = firebase.database();
 
+        let selectedLevel = 0;
+        let selectedLevelName = "";
+        let selectedArmy = "";
+        let selectedSub = "";
+
+        // --- سجل التعليقات ---
         function saveComment() {
             const name = document.getElementById('comm_name').value;
             const text = document.getElementById('comm_text').value;
             if(!name || !text) { alert("اكتب اسمك وتعليقك أولاً!"); return; }
             db.ref('comments').push({ name: name, text: text, date: new Date().toLocaleString('ar-EG') });
-            document.getElementById('comm_name').value = "";
-            document.getElementById('comm_text').value = "";
+            document.getElementById('comm_name').value = ""; document.getElementById('comm_text').value = "";
         }
 
         db.ref('comments').on('value', (snapshot) => {
@@ -306,28 +316,112 @@
                     const c = data[key];
                     const div = document.createElement('div');
                     div.className = 'comment-item';
-                    div.innerHTML = `
-                        <div class="comment-header">
-                            <span style="color:var(--accent); font-weight:bold;">${c.name}</span>
-                            <span>${c.date} <span class="admin-del" onclick="deleteComment('${key}')">حذف</span></span>
-                        </div>
-                        <p>${c.text}</p>`;
+                    div.innerHTML = `<div class="comment-header"><span style="color:var(--accent); font-weight:bold;">${c.name}</span><span>${c.date} <span class="admin-del" onclick="deleteItem('comments/', '${key}')">حذف</span></span></div><p>${c.text}</p>`;
                     list.appendChild(div);
                 });
             }
         });
 
-        function deleteComment(key) {
-            if(prompt("أدخل كلمة سر الإدارة للحذف:") === "123") { db.ref('comments/' + key).remove(); } 
-            else { alert("عذراً، الصلاحية للمعلمين فقط!"); }
+        // --- سجل طلبات الانضمام (الجديد) ---
+        db.ref('registrations').on('value', (snapshot) => {
+            const logDiv = document.getElementById('registrationLog');
+            logDiv.innerHTML = "";
+            const data = snapshot.val();
+            if (data) {
+                Object.keys(data).reverse().forEach(key => {
+                    const r = data[key];
+                    const div = document.createElement('div');
+                    div.className = 'log-item';
+                    div.innerHTML = `
+                        <div class="log-header">
+                            <span style="color:var(--accent); font-weight:bold;">👤 المتقدم: ${r.name}</span>
+                            <span>${r.date} <span class="admin-del" onclick="deleteItem('registrations/', '${key}')">حذف الطلب</span></span>
+                        </div>
+                        <div style="font-size:0.9rem; color:var(--text-secondary);">
+                            📍 البلد: ${r.country} | 🎖️ المستوى: ${r.level} (${r.price}$) <br>
+                            🎮 الجيش المختار: ${r.army} - ${r.subArmy}
+                        </div>
+                    `;
+                    logDiv.appendChild(div);
+                });
+            } else {
+                logDiv.innerHTML = "<p style='text-align:center; color:#555;'>لا توجد طلبات مسجلة حالياً</p>";
+            }
+        });
+
+        function deleteItem(path, key) {
+            if(prompt("أدخل كلمة سر الإدارة للحذف (123):") === "123") { 
+                db.ref(path + key).remove(); 
+            } else { 
+                alert("عذراً، الصلاحية للمعلمين فقط!"); 
+            }
         }
 
+        // --- وظائف النموذج ---
+        function selectLevel(el, price, name) {
+            document.querySelectorAll('.level-option').forEach(opt => opt.classList.remove('selected'));
+            el.classList.add('selected');
+            selectedLevel = price;
+            selectedLevelName = name;
+        }
+
+        function handleArmyClick(el, army) {
+            selectedArmy = army;
+            document.querySelectorAll('.army-option').forEach(opt => opt.classList.remove('selected'));
+            el.classList.add('selected');
+            const subOptions = document.getElementById('subOptions');
+            subOptions.innerHTML = "";
+            const faks = {'GLA':['Vanilla','Demo','Stealth','Toxin'],'USA':['Vanilla','SuperWeapon','Laser','AirForce'],'CHINA':['Vanilla','Infantry','Nuke','Tank']};
+            faks[army].forEach(sub => {
+                const div = document.createElement('div');
+                div.className = 'sub-option'; div.innerText = sub;
+                div.onclick = function() {
+                    selectedSub = sub;
+                    document.querySelectorAll('.sub-option').forEach(s => s.classList.remove('selected'));
+                    div.classList.add('selected');
+                };
+                subOptions.appendChild(div);
+            });
+            document.getElementById('subContainer').style.display = "block";
+        }
+
+        function validateAndSubmit() {
+            const fields = ['reg_userName', 'reg_userEmail', 'phoneNum', 'cardNumber', 'cardExpiry', 'cardCVC', 'userCountry'];
+            for(let f of fields) { if(!document.getElementById(f).value) { alert("يرجى إكمال كافة الحقول وبطاقة الائتمان!"); return; } }
+            if(!selectedLevel || !selectedArmy || !selectedSub) { alert("يرجى اختيار المستوى والجيش!"); return; }
+
+            // حفظ الطلب في Firebase
+            const regData = {
+                name: document.getElementById('reg_userName').value,
+                country: document.getElementById('userCountry').value,
+                level: selectedLevelName,
+                price: selectedLevel,
+                army: selectedArmy,
+                subArmy: selectedSub,
+                date: new Date().toLocaleString('ar-EG')
+            };
+
+            db.ref('registrations').push(regData);
+
+            document.getElementById('actualForm').style.display = "none";
+            const msg = document.getElementById('priceMsg');
+            msg.style.display = "block";
+            msg.innerHTML = selectedLevel === 100 ? "تم استلام الطلب! أنت الآن في مستوى الاحتراف.<br>سيتم تدريبك مباشرة تحت إشراف الأوس وماوكلي." : `تم استلام طلبك! سيتم إرسال المواد التدريبية إلى بريدك الإلكتروني بعد تأكيد الدفع (${selectedLevel}$).`;
+        }
+
+        // --- وظائف عامة ---
+        function openForm() { document.getElementById('formOverlay').style.display = "flex"; }
+        function closeForm(e) { if(e.target.id === 'formOverlay') document.getElementById('formOverlay').style.display = "none"; }
+        function openImage(src) { document.getElementById('imageModal').style.display = "flex"; document.getElementById('fullImage').src = src; }
+        function closeImage() { document.getElementById('imageModal').style.display = "none"; }
+        function playDarkTheme() { document.getElementById('evilLaugh').play().catch(()=>{}); }
+        
+        // Canvas
         const canvas = document.getElementById('bg-canvas');
         const ctx = canvas.getContext('2d');
         let particles = [];
         function initCanvas() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
+            canvas.width = window.innerWidth; canvas.height = window.innerHeight;
             particles = [];
             for(let i=0; i<60; i++) particles.push({x: Math.random()*canvas.width, y: Math.random()*canvas.height, r: Math.random()*2, s: Math.random()*0.5});
         }
@@ -341,54 +435,9 @@
             requestAnimationFrame(drawParticles);
         }
         initCanvas(); drawParticles();
+        window.onresize = initCanvas;
 
-        function openImage(src) { document.getElementById('imageModal').style.display = "flex"; document.getElementById('fullImage').src = src; }
-        function closeImage() { document.getElementById('imageModal').style.display = "none"; }
-        function openForm() { document.getElementById('formOverlay').style.display = "flex"; }
-        function closeForm(e) { if(e.target.id === 'formOverlay') document.getElementById('formOverlay').style.display = "none"; }
-
-        let selectedLevel = 0;
-        const subFactions = {
-            'GLA': ['Vanilla', 'Demo', 'Stealth', 'Toxin'],
-            'USA': ['Vanilla', 'Super Weapon', 'Laser', 'Air Force'],
-            'CHINA': ['Vanilla', 'Infantry', 'Nuke', 'Tank']
-        };
-
-        function selectLevel(el, price) {
-            document.querySelectorAll('.level-option').forEach(opt => opt.classList.remove('selected'));
-            el.classList.add('selected');
-            selectedLevel = price;
-        }
-
-        function handleArmyClick(el, army) {
-            document.querySelectorAll('.army-option').forEach(opt => opt.classList.remove('selected'));
-            el.classList.add('selected');
-            const subContainer = document.getElementById('subContainer');
-            const subOptions = document.getElementById('subOptions');
-            subOptions.innerHTML = "";
-            subFactions[army].forEach(sub => {
-                const div = document.createElement('div');
-                div.className = 'sub-option';
-                div.innerText = sub;
-                div.onclick = function() {
-                    document.querySelectorAll('.sub-option').forEach(s => s.classList.remove('selected'));
-                    div.classList.add('selected');
-                };
-                subOptions.appendChild(div);
-            });
-            subContainer.style.display = "block";
-        }
-
-        function validateAndSubmit() {
-            const fields = ['reg_userName', 'reg_userEmail', 'phoneNum', 'cardNumber', 'cardExpiry', 'cardCVC', 'userCountry'];
-            for(let f of fields) { if(!document.getElementById(f).value) { alert("يرجى إكمال كافة الحقول وبطاقة الائتمان!"); return; } }
-            if(selectedLevel === 0) { alert("يرجى اختيار مستوى التدريب!"); return; }
-            document.getElementById('actualForm').style.display = "none";
-            const msg = document.getElementById('priceMsg');
-            msg.style.display = "block";
-            msg.innerHTML = selectedLevel === 100 ? "عندما سيتم تأكيد الدفع (100$).<br>أنت الآن في مستوى الاحتراف! سيتم تدريبك مباشرة تحت إشراف الأوس وماوكلي." : `عندما ستيم تأكيد الدفع (${selectedLevel}$).<br>سيتم إرسال المواد التدريبية إلى بريدك الإلكتروني.`;
-        }
-
+        // Countdown
         const targetDate = new Date("July 26, 2026 00:00:00").getTime();
         setInterval(() => {
             const diff = targetDate - new Date().getTime();
@@ -398,9 +447,6 @@
             document.getElementById("minutes").innerText = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60)).toString().padStart(2, '0');
             document.getElementById("seconds").innerText = Math.floor((diff % (1000 * 60)) / 1000).toString().padStart(2, '0');
         }, 1000);
-
-        function playDarkTheme() { document.getElementById('evilLaugh').play().catch(()=>{}); }
-        window.onresize = initCanvas;
     </script>
 </body>
 </html>
