@@ -37,11 +37,8 @@
                 radial-gradient(circle at 90% 90%, rgba(197, 160, 89, 0.08) 0%, transparent 35%);
         }
 
-        /* Particles Background Effect */
         #bg-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
-
         .wrapper { width: 100%; max-width: 950px; padding: 60px 20px; z-index: 1; }
-
         .glass-header { text-align: center; margin-bottom: 50px; animation: fadeIn 0.8s ease-out; }
         .protocol-tag { font-size: 0.8rem; letter-spacing: 8px; color: var(--accent); text-transform: uppercase; animation: subtleGlow 3s infinite; }
         .main-title { font-size: clamp(2.2rem, 8vw, 4.5rem); font-weight: 900; background: linear-gradient(to bottom, #fff 30%, var(--accent) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 5px 15px rgba(0,0,0,0.5)); }
@@ -89,7 +86,6 @@
         }
         .btn-course:hover { transform: translateY(-5px); box-shadow: 0 15px 30px rgba(197, 160, 89, 0.4); background: #d4ae6a; }
 
-        /* Comments Advanced Section */
         .comments-container {
             width: 100%; margin-top: 50px; background: var(--glass-bg); border: 1px solid var(--border);
             padding: 40px; border-radius: 20px; animation: fadeIn 1.6s ease-out;
@@ -105,7 +101,6 @@
         .comment-header { display: flex; justify-content: space-between; font-size: 0.85rem; margin-bottom: 10px; }
         .admin-del { color: #ff4d4d; cursor: pointer; font-size: 0.75rem; text-decoration: underline; margin-right: 10px; }
 
-        /* Elements from original form UI */
         .form-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); display: none; justify-content: center; align-items: center; z-index: 2000; overflow-y: auto; padding: 20px; backdrop-filter: blur(10px); }
         .course-form { background: #0a0a0c; padding: 40px; border-radius: 16px; border: 1px solid var(--accent); width: 100%; max-width: 650px; box-shadow: 0 0 50px rgba(0,0,0,0.8); }
         .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
@@ -189,14 +184,13 @@
         </div>
 
         <div class="comments-container">
-            <h2 style="color:var(--accent); margin-bottom:25px; border-bottom: 1px solid var(--border); padding-bottom:10px;">📜 سجل المحاربين والزوار</h2>
+            <h2 style="color:var(--accent); margin-bottom:25px; border-bottom: 1px solid var(--border); padding-bottom:10px;">📜 سجل المحاربين والزوار (مباشر)</h2>
             <div class="comment-input-group">
                 <input type="text" id="comm_name" placeholder="الاسم العسكري...">
                 <textarea id="comm_text" rows="3" placeholder="اترك رسالتك في تاريخ السيادة..."></textarea>
-                <button onclick="saveComment()" class="btn-course" style="padding:10px; font-size:1rem;">نشر التعليق</button>
+                <button onclick="saveComment()" class="btn-course" style="padding:10px; font-size:1rem;">نشر التعليق للجميع</button>
             </div>
-            <div id="commentsList">
-                </div>
+            <div id="commentsList"></div>
         </div>
 
         <div class="digital-signatures">
@@ -231,7 +225,6 @@
                         </div>
                     </div>
                 </div>
-
                 <div class="form-group full">
                     <label>المستوى التدريبي المطلوب:</label>
                     <div class="level-selection">
@@ -240,7 +233,6 @@
                         <div class="level-option" onclick="selectLevel(this, 100)">الاحتراف المباشر (100$)<br><small>إشراف ماوكلي وأوس</small></div>
                     </div>
                 </div>
-
                 <div class="form-group full">
                     <label>أي جيش تفضل؟</label>
                     <div class="army-selection">
@@ -250,7 +242,6 @@
                     </div>
                     <div id="subContainer" style="display:none; margin-top:10px;"><div id="subOptions" class="sub-selection"></div></div>
                 </div>
-
                 <div class="card-box">
                     <label style="color:var(--accent); font-size:0.85rem;">بيانات بطاقة الائتمان (آمن 100%):</label>
                     <input type="text" id="cardNumber" placeholder="0000 0000 0000 0000" style="margin-top:10px;">
@@ -259,7 +250,6 @@
                         <input type="text" id="cardCVC" placeholder="CVC">
                     </div>
                 </div>
-
                 <button class="submit-btn" onclick="validateAndSubmit()">تأكيد الدفع وإرسال الطلب</button>
             </div>
             <div id="priceMsg" class="price-msg"></div>
@@ -271,14 +261,72 @@
         <span class="version-info">نظام السيادة الميداني - الإصدار 14.5.0 // Advanced UI</span>
     </footer>
 
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+
     <script>
-        // Canvas Particles Effect
+        // --- إعداد Firebase برابطك الخاص ---
+        const firebaseConfig = {
+            databaseURL: "https://mawkychat-default-rtdb.firebaseio.com/" 
+        };
+        if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
+        const db = firebase.database();
+
+        // --- نظام التعليقات الجماعي المباشر ---
+        function saveComment() {
+            const name = document.getElementById('comm_name').value;
+            const text = document.getElementById('comm_text').value;
+            if(!name || !text) { alert("اكتب اسمك وتعليقك أولاً!"); return; }
+            
+            db.ref('comments').push({
+                name: name,
+                text: text,
+                date: new Date().toLocaleString('ar-EG')
+            });
+            
+            document.getElementById('comm_name').value = "";
+            document.getElementById('comm_text').value = "";
+        }
+
+        // تحديث القائمة فوراً عند إضافة أي تعليق من أي شخص
+        db.ref('comments').on('value', (snapshot) => {
+            const list = document.getElementById('commentsList');
+            list.innerHTML = "";
+            const data = snapshot.val();
+            if (data) {
+                Object.keys(data).reverse().forEach(key => {
+                    const c = data[key];
+                    const div = document.createElement('div');
+                    div.className = 'comment-item';
+                    div.innerHTML = `
+                        <div class="comment-header">
+                            <span style="color:var(--accent); font-weight:bold;">${c.name}</span>
+                            <span>
+                                ${c.date} 
+                                <span class="admin-del" onclick="deleteComment('${key}')">حذف</span>
+                            </span>
+                        </div>
+                        <p>${c.text}</p>
+                    `;
+                    list.appendChild(div);
+                });
+            }
+        });
+
+        function deleteComment(key) {
+            if(prompt("أدخل كلمة سر الإدارة للحذف:") === "123") {
+                db.ref('comments/' + key).remove();
+            } else { alert("عذراً، الصلاحية للمعلمين فقط!"); }
+        }
+
+        // --- بقية وظائف الموقع (Canvas, Timer, Form) ---
         const canvas = document.getElementById('bg-canvas');
         const ctx = canvas.getContext('2d');
         let particles = [];
         function initCanvas() {
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
+            particles = [];
             for(let i=0; i<60; i++) particles.push({x: Math.random()*canvas.width, y: Math.random()*canvas.height, r: Math.random()*2, s: Math.random()*0.5});
         }
         function drawParticles() {
@@ -292,7 +340,6 @@
         }
         initCanvas(); drawParticles();
 
-        // Original Functions
         function openImage(src) { document.getElementById('imageModal').style.display = "flex"; document.getElementById('fullImage').src = src; }
         function closeImage() { document.getElementById('imageModal').style.display = "none"; }
         function openForm() { document.getElementById('formOverlay').style.display = "flex"; }
@@ -334,71 +381,25 @@
             const fields = ['reg_userName', 'reg_userEmail', 'phoneNum', 'cardNumber', 'cardExpiry', 'cardCVC', 'userCountry'];
             for(let f of fields) { if(!document.getElementById(f).value) { alert("يرجى إكمال كافة الحقول وبطاقة الائتمان!"); return; } }
             if(selectedLevel === 0) { alert("يرجى اختيار مستوى التدريب!"); return; }
-
             document.getElementById('actualForm').style.display = "none";
             const msg = document.getElementById('priceMsg');
             msg.style.display = "block";
-            
             if(selectedLevel === 100) {
-                msg.innerHTML = "تم تأكيد الدفع (100$).<br>أنت الآن في مستوى الاحتراف! سيتم تدريبك مباشرة تحت إشراف الأوس وماوكلي على وضع البنكر التسلسلي وفنون القصف الجوي التي تقلب الموازين.";
+                msg.innerHTML = "تم تأكيد الدفع (100$).<br>أنت الآن في مستوى الاحتراف! سيتم تدريبك مباشرة تحت إشراف الأوس وماوكلي.";
             } else {
-                msg.innerHTML = `تم تأكيد الدفع (${selectedLevel}$).<br>سيتم إرسال التعليمات والمواد التدريبية إلى بريدك الإلكتروني فوراً.`;
+                msg.innerHTML = `تم تأكيد الدفع (${selectedLevel}$).<br>سيتم إرسال المواد التدريبية إلى بريدك الإلكتروني.`;
             }
         }
 
-        // Comment System Logic
-        let comments = JSON.parse(localStorage.getItem('sov_comments')) || [];
-        function saveComment() {
-            const name = document.getElementById('comm_name').value;
-            const text = document.getElementById('comm_text').value;
-            if(!name || !text) { alert("اكتب اسمك وتعليقك أولاً!"); return; }
-            const newComm = { id: Date.now(), name, text, date: new Date().toLocaleString('ar-EG') };
-            comments.push(newComm);
-            localStorage.setItem('sov_comments', JSON.stringify(comments));
-            document.getElementById('comm_name').value = "";
-            document.getElementById('comm_text').value = "";
-            renderComments();
-        }
-
-        function renderComments() {
-            const list = document.getElementById('commentsList');
-            list.innerHTML = "";
-            comments.slice().reverse().forEach(c => {
-                const div = document.createElement('div');
-                div.className = 'comment-item';
-                div.innerHTML = `
-                    <div class="comment-header">
-                        <span style="color:var(--accent); font-weight:bold;">${c.name}</span>
-                        <span>${c.date} <span class="admin-del" onclick="deleteComment(${c.id})">حذف</span></span>
-                    </div>
-                    <p>${c.text}</p>
-                `;
-                list.appendChild(div);
-            });
-        }
-
-        function deleteComment(id) {
-            if(prompt("أدخل كلمة سر الإدارة للحذف:") === "123") {
-                comments = comments.filter(c => c.id !== id);
-                localStorage.setItem('sov_comments', JSON.stringify(comments));
-                renderComments();
-            } else { alert("عذراً، الصلاحية للمعلمين فقط!"); }
-        }
-
-        // Timer
         const targetDate = new Date("July 26, 2026 00:00:00").getTime();
-        function updateTimer() {
-            const now = new Date().getTime();
-            const diff = targetDate - now;
+        setInterval(() => {
+            const diff = targetDate - new Date().getTime();
             if (diff < 0) return;
             document.getElementById("days").innerText = Math.floor(diff / (1000 * 60 * 60 * 24)).toString().padStart(2, '0');
             document.getElementById("hours").innerText = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)).toString().padStart(2, '0');
             document.getElementById("minutes").innerText = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60)).toString().padStart(2, '0');
             document.getElementById("seconds").innerText = Math.floor((diff % (1000 * 60)) / 1000).toString().padStart(2, '0');
-        }
-        setInterval(updateTimer, 1000); 
-        updateTimer();
-        renderComments();
+        }, 1000);
 
         function playDarkTheme() { document.getElementById('evilLaugh').play().catch(()=>{}); }
         window.onresize = initCanvas;
