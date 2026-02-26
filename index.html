@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>وثيقة الإقصاء النهائية | ماوكلي و الأوس</title>
+    <style>
+        :root {
+            --dark-steel: #0a0a0a;
+            --gold-leaf: #b8860b;
+            --dark-red: #4a0404;
+            --light-gray: #d1d1d1;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Times New Roman', serif;
+            background-color: var(--dark-steel);
+            color: var(--light-gray);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-image: radial-gradient(circle at center, #1a1a1a 0%, #050505 100%);
+            line-height: 1.6;
+        }
+
+        .main-container {
+            width: 100%;
+            max-width: 850px;
+            background: rgba(0, 0, 0, 0.9);
+            border: 2px solid var(--gold-leaf);
+            padding: 60px;
+            box-shadow: 0 0 100px rgba(0, 0, 0, 1), inset 0 0 20px rgba(184, 134, 11, 0.1);
+            position: relative;
+        }
+
+        .main-container::after {
+            content: 'V';
+            position: absolute;
+            bottom: 10px; right: 10px;
+            font-size: 10px; color: var(--gold-leaf); opacity: 0.3;
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 2px solid var(--gold-leaf);
+            padding-bottom: 30px;
+            margin-bottom: 40px;
+        }
+
+        .title {
+            font-size: 3.5rem;
+            color: var(--gold-leaf);
+            margin: 0;
+            font-weight: 900;
+            letter-spacing: 5px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .sub-header {
+            font-size: 1rem;
+            letter-spacing: 8px;
+            color: var(--dark-red);
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        .content-section {
+            text-align: justify;
+            margin-bottom: 50px;
+        }
+
+        .content-section p {
+            font-size: 1.25rem;
+            margin-bottom: 25px;
+            color: #ccc;
+        }
+
+        .highlight-gold {
+            color: var(--gold-leaf);
+            font-weight: bold;
+        }
+
+        .master-names {
+            font-size: 1.5rem;
+            color: #fff;
+            border-bottom: 1px solid var(--gold-leaf);
+            padding: 0 5px;
+            font-weight: bold;
+        }
+
+        .loser-names {
+            color: #555;
+            text-decoration: line-through;
+            font-style: italic;
+        }
+
+        .rep-section {
+            background: rgba(184, 134, 11, 0.05);
+            padding: 30px;
+            border: 1px solid rgba(184, 134, 11, 0.2);
+            text-align: center;
+        }
+
+        .rep-title {
+            font-size: 1.5rem;
+            color: var(--gold-leaf);
+            margin-bottom: 20px;
+            font-weight: bold;
+            display: block;
+            text-decoration: underline;
+        }
+
+        .timer-val {
+            font-size: 2rem;
+            color: #fff;
+            font-family: 'Courier New', monospace;
+            display: block;
+            margin: 20px 0;
+            letter-spacing: 3px;
+        }
+
+        .download-btn {
+            display: inline-block;
+            padding: 15px 50px;
+            border: 1px solid var(--gold-leaf);
+            color: var(--gold-leaf);
+            text-decoration: none;
+            font-size: 1.1rem;
+            font-weight: bold;
+            transition: 0.5s;
+            text-transform: uppercase;
+        }
+
+        .download-btn:hover {
+            background: var(--gold-leaf);
+            color: #000;
+            box-shadow: 0 0 30px rgba(184, 134, 11, 0.3);
+        }
+
+        footer {
+            margin-top: 40px;
+            text-align: center;
+            font-size: 0.7rem;
+            color: #333;
+            letter-spacing: 4px;
+        }
+    </style>
+</head>
+<body onclick="playDarkTheme()">
+
+    <audio id="evilLaugh">
+        <source src="https://www.myinstants.com/media/sounds/evil-laugh-dark-knight.mp3" type="audio/mpeg">
+    </audio>
+
+    <div class="main-container">
+        <header>
+            <h1 class="title">بيان السيطرة المطلقة</h1>
+            <div class="sub-header">THE SUPREMACY PROTOCOL</div>
+        </header>
+
+        <section class="content-section">
+            <p>
+                بناءً على مقتضيات السيادة الميدانية، وتطبيقاً لقوانين القوة التي لا تحابي الضعفاء، نعلن نحن <span class="master-names">المعلم ماوكلي</span> و <span class="master-names">الأوس</span> عن البدء الفوري لبروتوكول العزل الشامل ضد المدعوين <span class="loser-names">ياسر وهارون</span>.
+            </p>
+            <p>
+                لقد تجاوز غروركما حدود المهارة، فكان لزاماً علينا أن نعيدكما إلى حجمكما الطبيعي خلف أسوار النسيان. إن ما حدث في الميدان لم يكن مجرد جولة عابرة، بل كان <span class="highlight-gold">تصفية حسابات مهارية</span> أثبتت أنكما مجرد عابرين في ساحة العمالقة.
+            </p>
+            <p>
+                أنتما الآن تقبعان في حالة <span class="highlight-gold">نفي تقني</span> تام. يُحظر عليكما محاولة الاتصال أو طلب المنافسة، فنحن لا نضيع وقتنا مع من لم يتقنوا أبجديات الصمود بعد. إن مواجهتنا ليست حقاً مكتسباً، بل هي شرف لا يناله إلا الأكفاء، وأنتما أبعد ما تكونان عن ذلك.
+            </p>
+            <p>
+                لقد سقطت كل أوهامكما عند أول اختبار حقيقي، وتبين للجميع أن صمودكم لم يكن إلا مجرد حظ عابر انتهى تحت أقدام المعلمين. لا مجال اليوم للأعذار الواهية، فالتاريخ لا يذكر إلا المنتصرين، وأنتم لستم سوى هامش في كتاب انتصاراتنا.
+            </p>
+            <p>
+                إن هذه الوثيقة ليست مجرد كلمات، بل هي حكم مبرم بالخضوع. لقد كسرنا شوكة التحدي في نفوسكم، وجعلنا من هزيمتكم عبرة لكل من تسول له نفسه التطاول على أسياد الساحة. الصمت الآن هو خياركم الوحيد، والاعتراف بالعجز هو أول خطوات التكفير عن غروركم.
+            </p>
+            <p>
+                في عالم القوة، البقاء للأذكى والأشرس، وقد أثبت <span class="master-names">ماوكلي</span> و <span class="master-names">الأوس</span> أن العرش لا يقبل القسمة، وأن السيادة لمن يفرضها بالميدان لا باللسان. لقد انتهى زمن العبث، وبدأ زمن الخضوع للأمر الواقع المرير.
+            </p>
+            <p>
+                تبدأ الآن فترة <span class="highlight-gold">التأديب الإجباري</span> ومدتها ثلاثة أشهر. استغلا هذا الوقت في دراسة الهزيمة وبناء ما دمره الإقصاء. لا عودة، لا تفاوض، ولا صلح، حتى يثبت الزمن أنكما استوعبتما الدرس جيداً وتجرعتم مرارة السقوط بوقار.
+            </p>
+        </section>
+
+        <div class="rep-section">
+            <span class="rep-title">أرشيف السقوط المهين (REPLAY FILE)</span>
+            <p style="font-size: 0.9rem; color: #666;">قم بتحميل الدليل القاطع على تلاشي مهاراتكم أمام أسياد الميدان</p>
+            
+            <div id="timer" class="timer-val">90D : 00H : 00M : 00S</div>
+
+            <a href="https://www.mediafire.com/file/v2cn06n2u1omcmb/mawkly_oss_vs_yasser_haroon_.rep/file" 
+               target="_blank" class="download-btn">
+                DOWNLOAD THE RECORD OF DEFEAT
+            </a>
+        </div>
+
+        <footer>
+            DOMINATION ESTABLISHED - SUPREMACY CONFIRMED - NO REMATCH - 2026
+        </footer>
+    </div>
+
+    <script>
+        function playDarkTheme() {
+            const audio = document.getElementById('evilLaugh');
+            audio.volume = 0.4;
+            audio.play();
+        }
+
+        let totalSeconds = 90 * 24 * 3600;
+        setInterval(() => {
+            totalSeconds--;
+            let d = Math.floor(totalSeconds / 86400);
+            let h = Math.floor((totalSeconds % 86400) / 3600);
+            let m = Math.floor((totalSeconds % 3600) / 60);
+            let s = totalSeconds % 60;
+            document.getElementById('timer').innerText = 
+                `${String(d).padStart(2, '0')}D : ${String(h).padStart(2, '0')}H : ${String(m).padStart(2, '0')}M : ${String(s).padStart(2, '0')}S`;
+        }, 1000);
+    </script>
+</body>
+</html>
